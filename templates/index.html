@@ -8,7 +8,7 @@
         .terminal-box { background: #0a0a0a; padding: 30px; border: 2px solid #00ff41; border-radius: 5px; box-shadow: 0 0 20px #00ff41; display: inline-block; }
         input { padding: 12px; width: 350px; background: #000; color: #0f0; border: 1px solid #0f0; margin-bottom: 15px; outline: none; }
         button { padding: 12px 30px; background: #00ff41; color: #000; border: none; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        #output { text-align: left; background: #000; padding: 20px; margin-top: 25px; border: 1px dashed #0f0; overflow: auto; max-width: 850px; max-height: 500px; white-space: pre-wrap; color: #00ff41; }
+        #output { text-align: left; background: #000; padding: 20px; margin-top: 25px; border: 1px dashed #0f0; overflow: auto; max-width: 850px; max-height: 500px; color: #00ff41; }
     </style>
 </head>
 <body>
@@ -18,27 +18,20 @@
         <input type="text" id="target" placeholder="Enter Email, Phone, or Username...">
         <br>
         <button onclick="executeSearch()">Execute Search</button>
-        <div id="output">System Status: Secure Connection Ready...</div>
+        <div id="output">System Status: Ready for commands...</div>
     </div>
-
     <script>
         async function executeSearch() {
             const query = document.getElementById('target').value;
             const output = document.getElementById('output');
             if(!query) return alert("Error: Target required.");
-            
-            output.innerText = ">> Initializing GWL Cyber RAT...\n>> Scanning Leaked Databases...";
-            
-            const fd = new FormData();
-            fd.append('query', query);
-
+            output.innerText = ">> Initializing GWL Cyber RAT Search...\n>> Accessing Databases...";
+            const fd = new FormData(); fd.append('query', query);
             try {
                 const r = await fetch('/search', { method: 'POST', body: fd });
                 const d = await r.json();
                 output.innerText = JSON.stringify(d, null, 4);
-            } catch(e) { 
-                output.innerText = ">> Connection Error: API Unreachable."; 
-            }
+            } catch(e) { output.innerText = ">> Connection Error."; }
         }
     </script>
 </body>

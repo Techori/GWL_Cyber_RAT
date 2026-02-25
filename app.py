@@ -4,8 +4,8 @@ import os
 
 app = Flask(__name__)
 
-# Render ke Environment Variables se token lega
-LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN', 'YOUR_TOKEN_HERE')
+# Render dashboard se token uthayega
+LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN', '7128071523:JwiJw8eG')
 
 @app.route('/')
 def index():
@@ -15,9 +15,8 @@ def index():
 def search():
     query = request.form.get('query')
     if not query:
-        return jsonify({"error": "Target input required"})
+        return jsonify({"error": "Target required"})
 
-    # Leakosint API call as per documentation
     url = "https://leakosintapi.com/"
     payload = {
         "token": LEAK_TOKEN, 
@@ -25,7 +24,6 @@ def search():
         "limit": 100, 
         "lang": "en"
     }
-    
     try:
         response = requests.post(url, json=payload).json()
         return jsonify(response.get("List", {}))
