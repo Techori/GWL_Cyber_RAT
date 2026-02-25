@@ -39,7 +39,7 @@ def ask_rat():
     osint_data = request.json.get('data', 'No data found.')
     
     if not GEMINI_KEY:
-        return jsonify({"reply": "Cyber Rat logic offline: Missing Neural Key."})
+        return jsonify({"reply": "Cyber Rat logic offline: Neural key missing in Render Environment Variables. Please add GEMINI_API_KEY to Render Dashboard."})
 
     gemini_url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key={GEMINI_KEY}"
     prompt = f"You are 'Cyber Rat', a professional OSINT AI. Analyze this data: {osint_data}. User asks: {user_msg}. Respond like a hacker agent."
