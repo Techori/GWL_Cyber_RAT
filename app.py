@@ -4,7 +4,7 @@ import os
 
 app = Flask(__name__)
 
-# Naya API Token jo aapne generate kiya hai
+# Render dashboard se token uthayega, backup ke liye aapka naya token
 LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN', '7128071523:0Lv2XEkN')
 
 @app.route('/')
@@ -15,7 +15,7 @@ def index():
 def search():
     query = request.form.get('query')
     if not query:
-        return jsonify({"error": "No query provided"}), 400
+        return jsonify({"error": "Input required"}), 400
     
     url = "https://leakosintapi.com/"
     payload = {
@@ -25,12 +25,13 @@ def search():
         "lang": "en"
     }
     try:
-        response = requests.post(url, json=payload).json()
+        # API call execute karein
+        response = requests.post(url, json=payload, timeout=10).json()
         return jsonify(response.get("List", {}))
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    # Render ke liye dynamic port configuration
+    # Render ke liye dynamic port zaroori hai
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port)
