@@ -4,8 +4,8 @@ import os
 
 app = Flask(__name__)
 
-# Render dashboard se token uthayega
-LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN', '7128071523:JwiJw8eG')
+# Render ke environment se token uthayega
+LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN')
 
 @app.route('/')
 def index():
@@ -15,8 +15,8 @@ def index():
 def search():
     query = request.form.get('query')
     if not query:
-        return jsonify({"error": "Target required"})
-
+        return jsonify({"error": "No query provided"}), 400
+    
     url = "https://leakosintapi.com/"
     payload = {
         "token": LEAK_TOKEN, 
@@ -28,7 +28,9 @@ def search():
         response = requests.post(url, json=payload).json()
         return jsonify(response.get("List", {}))
     except Exception as e:
-        return jsonify({"error": str(e)})
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000)
+    # Render ke liye port specify karna zaroori hai
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host='0.0.0.0', port=port)
