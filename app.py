@@ -3,6 +3,7 @@ import requests
 import os
 
 app = Flask(__name__)
+# Naya API Token jo aapne generate kiya hai
 LEAK_TOKEN = os.environ.get('LEAKOSINT_TOKEN', '7128071523:0Lv2XEkN')
 
 @app.route('/')
@@ -13,10 +14,10 @@ def index():
 def search():
     query = request.form.get('query')
     if not query:
-        return jsonify({"status": "error", "msg": "Input required"}), 400
+        return jsonify({"status": "error", "msg": "Target required"}), 400
     
     url = "https://leakosintapi.com/"
-    # Payload as a Python Dict
+    # Strict JSON Payload format
     payload = {
         "token": LEAK_TOKEN, 
         "request": str(query).strip(), 
@@ -25,12 +26,7 @@ def search():
     }
     
     try:
-        # Strict JSON Headers add kiye hain
-        headers = {
-            'Content-Type': 'application/json',
-            'Accept': 'application/json'
-        }
-        # json=payload ensures formatting is correct JSON
+        headers = {'Content-Type': 'application/json', 'Accept': 'application/json'}
         response = requests.post(url, json=payload, headers=headers, timeout=15)
         
         if response.status_code == 200:
@@ -38,11 +34,8 @@ def search():
             results = data.get("List")
             if results:
                 return jsonify({"status": "success", "data": results})
-            else:
-                return jsonify({"status": "no_data", "msg": "Target not found in intelligence grid"})
-        else:
-            return jsonify({"status": "api_error", "msg": f"Server Refused Request (Code: {response.status_code})"})
-            
+            return jsonify({"status": "no_data", "msg": "Intelligence Grid: No data matches found."})
+        return jsonify({"status": "api_error", "msg": f"API Error: {response.status_code}"})
     except Exception as e:
         return jsonify({"status": "crash", "msg": str(e)})
 
