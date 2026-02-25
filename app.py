@@ -16,22 +16,32 @@ def search():
         return jsonify({"status": "error", "msg": "Input required"}), 400
     
     url = "https://leakosintapi.com/"
-    payload = {"token": LEAK_TOKEN, "request": str(query).strip(), "limit": 100, "lang": "en"}
+    # Payload as a Python Dict
+    payload = {
+        "token": LEAK_TOKEN, 
+        "request": str(query).strip(), 
+        "limit": 100, 
+        "lang": "en"
+    }
     
     try:
-        # Checkpoint 1: Backend reached
-        response = requests.post(url, json=payload, timeout=15)
+        # Strict JSON Headers add kiye hain
+        headers = {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+        }
+        # json=payload ensures formatting is correct JSON
+        response = requests.post(url, json=payload, headers=headers, timeout=15)
         
-        # Checkpoint 2: API Responded
         if response.status_code == 200:
             data = response.json()
             results = data.get("List")
             if results:
                 return jsonify({"status": "success", "data": results})
             else:
-                return jsonify({"status": "no_data", "msg": "No response: Data not found in database"})
+                return jsonify({"status": "no_data", "msg": "Target not found in intelligence grid"})
         else:
-            return jsonify({"status": "api_error", "msg": f"API Error: {response.status_code}"})
+            return jsonify({"status": "api_error", "msg": f"Server Refused Request (Code: {response.status_code})"})
             
     except Exception as e:
         return jsonify({"status": "crash", "msg": str(e)})
