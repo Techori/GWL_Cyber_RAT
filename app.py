@@ -5,7 +5,7 @@ import os
 app = Flask(__name__)
 
 # Terminal se keys hardcode kar rahe hain for stability
-LEAK_TOKEN = "8580940237:Pwn3tQ13"
+LEAK_TOKEN = "1339437065:00xf9yMY"
 GEMINI_KEY = "AIzaSyAsIUu5qfLvxswYtZp8FTly6BOHYn27KIA"
 
 @app.route('/')
